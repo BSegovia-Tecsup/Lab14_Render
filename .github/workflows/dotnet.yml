@@ -1,0 +1,34 @@
+name: Build and Deploy .NET Application
+
+on:
+  push:
+    branches:
+      - main   # Ejecuta el workflow cuando se sube código a 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del repositorio
+      uses: actions/checkout@v4
+
+    - name: Instalar .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'   # La versión que estás usando
+
+    - name: Restaurar dependencias
+      run: dotnet restore
+
+    - name: Compilar aplicación
+      run: dotnet build --configuration Release
+
+    - name: Publicar aplicación
+      run: dotnet publish --configuration Release --output ./published
+
+    # Parte opcional para deploy (solo ejemplo)
+    - name: Deploy (ejemplo)
+      run: |
+        echo "Aquí va tu comando de despliegue"
+        echo "scp -r ./published usuario@servidor:/ruta/"
