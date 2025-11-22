@@ -1,0 +1,6 @@
+@LAB4_Bryan_Segovia_HostAddress = http://localhost:5260
+
+GET {{LAB4_Bryan_Segovia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
