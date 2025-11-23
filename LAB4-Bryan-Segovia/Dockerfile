@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 RUN dotnet restore
-RUN dotnet publish -c Release -o out
+# Agregamos --no-restore para intentar forzar una publicación limpia y romper el caché de Render
+RUN dotnet publish -c Release -o out --no-restore
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
