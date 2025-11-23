@@ -6,7 +6,15 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString;
+if (builder.Environment.IsProduction())
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
 
 builder.Services.AddDbContext<DbContextTienda>(options =>
     options.UseNpgsql(connectionString));
