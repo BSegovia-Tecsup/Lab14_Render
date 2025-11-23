@@ -6,14 +6,15 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 if (builder.Environment.IsProduction())
 {
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-}
-else
-{
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var renderConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    if (!string.IsNullOrEmpty(renderConnectionString))
+    {
+        connectionString = renderConnectionString;
+    }
 }
 
 builder.Services.AddDbContext<DbContextTienda>(options =>
@@ -40,12 +41,18 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Tienda BS v1");
-    c.RoutePrefix = string.Empty; 
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        // En producción, ajusta la ruta si es necesario.
+        var swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
+        c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "API Tienda BS v1");
+        // Sirve Swagger UI en la raíz.
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseHttpsRedirection();
 app.MapControllers();
