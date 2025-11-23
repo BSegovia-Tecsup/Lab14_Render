@@ -7,6 +7,8 @@ public partial class Producto
 {
     public int ProductoId { get; set; }
 
+    public int? CategoriaId { get; set; }
+
     public string Nombre { get; set; } = null!;
 
     public string? Descripcion { get; set; }
@@ -14,8 +16,6 @@ public partial class Producto
     public decimal Precio { get; set; }
 
     public int Stock { get; set; }
-
-    public int? CategoriaId { get; set; }
 
     public virtual Categoria? Categoria { get; set; }
 
